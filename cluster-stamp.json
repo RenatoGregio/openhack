@@ -524,6 +524,12 @@
                         "properties": {
                             "port": 443
                         }
+                    },
+                    {
+                        "name": "httpPort",
+                        "properties": {
+                            "port": 80
+                        }
                     }
                 ],
                 "autoscaleConfiguration": {
@@ -607,6 +613,19 @@
                             ],
                             "requireServerNameIndication": true
                         }
+                    },
+                    {
+                        "name": "myListener",
+                        "properties": {
+                            "frontendIPConfiguration": {
+                                "id": "[concat(variables('apwResourceId'), '/frontendIPConfigurations/apw-frontend-ip-configuration')]"
+                            },
+                            "frontendPort": {
+                                "id": "[concat(variables('apwResourceId'), '/frontendPorts/httpPort')]"
+                            },
+                            "protocol": "Http",
+                            "requireServerNameIndication": false
+                        }
                     }
                 ],
                 "requestRoutingRules": [
@@ -623,6 +642,36 @@
                             "backendHttpSettings": {
                                 "id": "[concat(variables('apwResourceId'), '/backendHttpSettingsCollection/aks-ingress-backendpool-httpsettings')]"
                             }
+                        }
+                    },
+                    {
+                        "Name": "rule2",
+                        "properties": {
+                            "RuleType": "Basic",
+                            "httpListener": {
+                                "id": "[concat(variables('apwResourceId'), '/httpListeners/myListener')]"
+                            },
+                            "redirectConfiguration": {
+                                "id": "[concat(variables('apwResourceId'), '/redirectConfigurations/httpToHttps')]"
+                            }
+                        }
+                    }
+                ],
+                "redirectConfigurations": [
+                    {
+                        "name": "httpToHttps",
+                        "properties": {
+                            "redirectType": "Permanent",
+                            "targetListener": {
+                                "id": "[concat(variables('apwResourceId'), '/httpListeners/listener-https')]"
+                            },
+                            "includePath": true,
+                            "includeQueryString": true,
+                            "requestRoutingRules": [
+                                {
+                                    "id": "[concat(variables('apwResourceId'), '/requestRoutingRules/rule2')]"
+                                }
+                            ]
                         }
                     }
                 ]
