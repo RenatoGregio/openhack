@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ngsa-webv
+  namespace: ngsa
+  labels:
+    app.kubernetes.io/name: ngsa-webv
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ngsa-webv
+  template:
+    metadata:
+      labels:
+        app: ngsa-webv
+    spec:
+      containers:
+        - name: app
+          image: acraksh6e4lxrewlare.azurecr.io/retaildevcrews/webvalidate:beta
+          imagePullPolicy: Always
+
+          args:
+          - --sleep 1000
+          - --run-loop
+          - --verbose
+          - --log-format Json
+          - --server https://luarnaut.aks-sb.com
+          - --files memory-benchmark.json
+
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 500m
+              memory: 512Mi
+
+      nodeSelector:
+        agentpool: npuser01
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ngsa-webv
+  namespace: ngsa
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: ngsa-webv
