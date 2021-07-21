@@ -21,12 +21,7 @@ spec:
           imagePullPolicy: Always
 
           args:
-          - --sleep 1000
-          - --run-loop
-          - --verbose
-          - --log-format Json
-          - --server https://luarnaut.aks-sb.com
-          - --files memory-benchmark.json
+            --sleep 1000 --run-loop --verbose --log-format Json --server https://luarnaut.aks-sb.com --files memory-benchmark.json
 
           ports:
             - name: http
