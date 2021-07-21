@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: ghcr.io/retaildevcrew/ngsa-app:beta
+          image: acraksh6e4lxrewlare.azurecr.io/retaildevcrew/ngsa-app:beta
           imagePullPolicy: Always
 
           args: 
